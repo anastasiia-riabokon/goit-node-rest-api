@@ -1,6 +1,5 @@
 import HttpError from "../helpers/HttpError.js";
 import ctrlWrapper from "../helpers/ctrlWrapper.js";
-import {createContactSchema, updateContactSchema} from "../schemas/contactsSchemas.js";
 import * as contactsService from "../services/contactsServices.js";
 
 export const getAllContacts = ctrlWrapper(async (_, res) => {
@@ -33,11 +32,6 @@ export const deleteContact = ctrlWrapper(async (req, res) => {
 });
 
 export const createContact = ctrlWrapper(async (req, res, next) => {
-  const {error} = createContactSchema.validate(req.body);
-  if (error) {
-    throw HttpError(400, error.message);
-  }
-
   const {name, email, phone} = req.body;
   const result = await contactsService.addContact(name, email, phone);
 
@@ -45,11 +39,6 @@ export const createContact = ctrlWrapper(async (req, res, next) => {
 });
 
 export const updateContact = ctrlWrapper(async (req, res, next) => {
-  const {error} = updateContactSchema.validate(req.body);
-  if (error) {
-    throw HttpError(400, error.message);
-  }
-
   const {id} = req.params;
 
   const result = await contactsService.updContact(id, req.body);
