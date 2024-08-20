@@ -1,4 +1,5 @@
 import express from "express";
+import isValidId from "../middlewares/isValidId.js";
 import {
   getAllContacts,
   getOneContact,
@@ -6,17 +7,22 @@ import {
   createContact,
   updateContact,
 } from "../controllers/contactsControllers.js";
+import validateBody from "../helpers/validateBody.js";
+import {createContactSchema, updateContactSchema} from "../schemas/contactsSchemas.js";
+
+const createMiddleware = validateBody(createContactSchema);
+const updateMiddleware = validateBody(updateContactSchema);
 
 const contactsRouter = express.Router();
 
 contactsRouter.get("/", getAllContacts);
 
-contactsRouter.get("/:id", getOneContact);
+contactsRouter.get("/:id", isValidId, getOneContact);
 
-contactsRouter.delete("/:id", deleteContact);
+contactsRouter.delete("/:id", isValidId, deleteContact);
 
-contactsRouter.post("/", createContact);
+contactsRouter.post("/", createMiddleware, createContact);
 
-contactsRouter.put("/:id", updateContact);
+contactsRouter.put("/:id", isValidId, updateMiddleware, updateContact);
 
 export default contactsRouter;
