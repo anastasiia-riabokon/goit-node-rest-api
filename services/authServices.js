@@ -4,7 +4,7 @@ import HttpError from "../helpers/HttpError.js";
 import User from "../models/User.js";
 import {createToken} from "../helpers/jwt.js";
 
-const findUser = (filter) => User.findOne(filter);
+export const findUser = (filter) => User.findOne(filter);
 
 export const signup = async (data) => {
   const {email, password} = data;
