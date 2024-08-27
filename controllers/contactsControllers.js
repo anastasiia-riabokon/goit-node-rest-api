@@ -14,7 +14,7 @@ export const getAllContacts = ctrlWrapper(async (req, res) => {
 export const getOneContact = ctrlWrapper(async (req, res) => {
   const {id} = req.params;
   const {_id: owner} = req.user;
-  const result = await contactsService.getContactById({_id: id, owner});
+  const result = await contactsService.getOneContact({_id: id, owner});
 
   if (!result) {
     throw HttpError(404, `Contact with id=${id} not found`);
