@@ -21,3 +21,12 @@ export const login = ctrlWrapper(async (req, res) => {
     },
   });
 });
+
+export const getCurrent = ctrlWrapper((req, res) => {
+  const {subscription, email} = req.user;
+
+  res.json({
+    subscription,
+    email,
+  });
+});
