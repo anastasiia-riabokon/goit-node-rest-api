@@ -5,6 +5,7 @@ import User from "../models/User.js";
 import {createToken} from "../helpers/jwt.js";
 
 export const findUser = (filter) => User.findOne(filter);
+export const updateUser = (filter, data) => User.findOneAndUpdate(filter, data);
 
 export const signup = async (data) => {
   const {email, password} = data;
@@ -37,6 +38,7 @@ export const signIn = async (data) => {
   };
 
   const token = createToken(payload);
+  await updateUser({_id: user._id}, {token});
 
   return {token, user};
 };

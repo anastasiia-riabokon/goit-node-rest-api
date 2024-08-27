@@ -30,3 +30,10 @@ export const getCurrent = ctrlWrapper((req, res) => {
     email,
   });
 });
+
+export const logout = ctrlWrapper(async (req, res) => {
+  const {_id} = req.user;
+  await authServices.updateUser({_id}, {token: ""});
+
+  res.status(204).json();
+});
