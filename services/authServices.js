@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 
 import HttpError from "../helpers/HttpError.js";
 import User from "../models/User.js";
+import {createToken} from "../helpers/jwt.js";
 
 const findUser = (filter) => User.findOne(filter);
 
@@ -17,4 +18,25 @@ export const signup = async (data) => {
   return User.create({...data, password: hashPassword});
 };
 
-export const signIn = (data) => {};
+export const signIn = async (data) => {
+  const {email, password} = data;
+  const user = await findUser({email});
+
+  if (!user) {
+    throw HttpError(401, "Email or password is wrong");
+  }
+
+  const passwordCompare = await bcrypt.compare(password, user.password);
+
+  if (!passwordCompare) {
+    throw HttpError(401, "Email or password is wrong");
+  }
+
+  const payload = {
+    id: user._id,
+  };
+
+  const token = createToken(payload);
+
+  return {token, user};
+};

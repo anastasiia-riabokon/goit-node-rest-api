@@ -10,4 +10,14 @@ export const register = ctrlWrapper(async (req, res) => {
   });
 });
 
-export const login = ctrlWrapper(async (req, res) => {});
+export const login = ctrlWrapper(async (req, res) => {
+  const {token, user} = await authServices.signIn(req.body);
+
+  res.json({
+    token,
+    user: {
+      subscription: user.subscription,
+      email: user.email,
+    },
+  });
+});
