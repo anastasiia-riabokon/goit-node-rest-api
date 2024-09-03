@@ -8,6 +8,7 @@ export const register = ctrlWrapper(async (req, res) => {
   res.status(201).json({
     subscription: newUser.subscription,
     email: newUser.email,
+    avatarURL: newUser.avatarURL,
   });
 });
 
