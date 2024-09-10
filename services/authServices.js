@@ -10,6 +10,15 @@ import sendEmail from "../helpers/sendEmail.js";
 export const findUser = (filter) => User.findOne(filter);
 export const updateUser = (filter, data) => User.findOneAndUpdate(filter, data);
 
+export const createVerifyEmail = (email, verificationToken) => {
+  return {
+    to: email,
+    from: process.env.SENDGRID_FROM,
+    subject: "Verify email",
+    html: `<a target="_blank" href="${process.env.BASE_URL}/api/users/verify/${verificationToken}">Click verify email</a>`,
+  };
+};
+
 export const signup = async (data) => {
   const {email, password} = data;
   const user = await findUser({email});
@@ -28,12 +37,7 @@ export const signup = async (data) => {
     verificationToken,
   });
 
-  const msg = {
-    to: email,
-    from: process.env.SENDGRID_FROM,
-    subject: "Verify email",
-    html: `<a target="_blank" href="${process.env.BASE_URL}/api/users/verify/${verificationToken}">Click verify email</a>`,
-  };
+  const msg = createVerifyEmail(email, verificationToken);
 
   sendEmail(msg);
 
@@ -48,6 +52,22 @@ export const verifyUser = async (verificationToken) => {
   }
 
   await updateUser({_id: user._id}, {verify: true, verificationToken: null});
+};
+
+export const reVerifyEmail = async (email) => {
+  const user = await findUser({email});
+
+  if (!user) {
+    throw HttpError(404, "User not found");
+  }
+
+  if (user.verify) {
+    throw HttpError(400, "Verification has already been passed");
+  }
+
+  const msg = createVerifyEmail(email, user.verificationToken);
+
+  sendEmail(msg);
 };
 
 export const signIn = async (data) => {

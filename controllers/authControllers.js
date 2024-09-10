@@ -91,3 +91,13 @@ export const verify = ctrlWrapper(async (req, res) => {
     message: "Email verified successfully",
   });
 });
+
+export const reVerify = ctrlWrapper(async (req, res) => {
+  const {email} = req.body;
+
+  await authServices.reVerifyEmail(email);
+
+  res.json({
+    message: "Verification email sent",
+  });
+});
