@@ -6,6 +6,7 @@ import {
   register,
   updAvatar,
   updSubscription,
+  verify,
 } from "../controllers/authControllers.js";
 import validateBody from "../helpers/validateBody.js";
 import {userSignInSchema, userSignupSchema} from "../schemas/userSchemas.js";
@@ -19,6 +20,7 @@ const updAvatarMiddleware = upload.single("avatar");
 const authRouter = express.Router();
 
 authRouter.post("/register", registerMiddleware, register);
+authRouter.get("/verify/:verificationToken", verify);
 authRouter.post("/login", loginMiddleware, login);
 authRouter.get("/current", authenticate, getCurrent);
 authRouter.post("/logout", authenticate, logout);

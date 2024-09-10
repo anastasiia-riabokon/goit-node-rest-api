@@ -15,6 +15,7 @@ export const register = ctrlWrapper(async (req, res) => {
     subscription: newUser.subscription,
     email: newUser.email,
     avatarURL: newUser.avatarURL,
+    verificationToken: newUser.verificationToken,
   });
 });
 
@@ -78,5 +79,15 @@ export const updAvatar = ctrlWrapper(async (req, res) => {
       email: updatedUser.email,
       avatarURL: updatedUser.avatarURL,
     },
+  });
+});
+
+export const verify = ctrlWrapper(async (req, res) => {
+  const {verificationToken} = req.params;
+
+  await authServices.verifyUser(verificationToken);
+
+  res.json({
+    message: "Email verified successfully",
   });
 });
